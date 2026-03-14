@@ -1,3 +1,6 @@
+*.hex
+*.uf2
+
 # nix
 result
 result-*

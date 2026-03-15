@@ -1,6 +1,10 @@
 *.hex
 *.uf2
 
+
+# direnv
+.direnv
+
 # nix
 result
 result-*

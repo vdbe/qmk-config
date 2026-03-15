@@ -37,10 +37,6 @@
               pkgs.qmk
               pkgs.dos2unix
             ];
-
-            shellHook = ''
-              export QMK_HOME="$(git rev-parse --show-toplevel)/qmk_firmware"
-            '';
           };
 
           nix = default.overrideAttrs (old: {

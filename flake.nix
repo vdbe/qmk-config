@@ -32,10 +32,11 @@
         { pkgs, system, ... }:
         let
           default = qmk;
-          qmk = pkgs.mkShellNoCC {
+          qmk = pkgs.mkShell {
             packages = [
-              pkgs.qmk
               pkgs.dos2unix
+              pkgs.keymap-drawer
+              pkgs.qmk
             ];
           };
 

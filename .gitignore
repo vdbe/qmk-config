@@ -1,6 +1,9 @@
+# qmk firmware images
 *.hex
 *.uf2
 
+# 
+assets/
 
 # direnv
 .direnv

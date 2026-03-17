@@ -34,6 +34,7 @@
           default = qmk;
           qmk = pkgs.mkShell {
             packages = [
+              pkgs.clang-tools
               pkgs.dos2unix
               pkgs.keymap-drawer
               pkgs.qmk

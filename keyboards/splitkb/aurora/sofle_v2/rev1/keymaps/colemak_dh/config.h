@@ -16,3 +16,5 @@
 
 #pragma once
 #define RGBLIGHT_EFFECT_BREATHING
+
+#define TAPPING_TOGGLE 1

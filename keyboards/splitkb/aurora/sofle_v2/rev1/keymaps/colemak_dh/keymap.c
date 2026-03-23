@@ -47,11 +47,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                              KC_TRNS,    KC_TRNS,    KC_TRNS,    MO(_ADJUST), KC_TRNS,    KC_TRNS, KC_TRNS, KC_TRNS,       KC_TRNS, KC_TRNS
     ),
     [_ADJUST] = LAYOUT(
-        KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,                          KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,
-        KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,                          KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,
-        KC_NO,   RM_TOGG, RM_HUEU, RM_SATU, RM_VALU, KC_NO,                          KC_NO,   KC_VOLD, KC_MUTE, KC_VOLU, KC_NO,   KC_NO,
-        KC_NO,   KC_NO,   KC_NO,   RM_NEXT, RM_HUED, RM_SATD, KC_TRNS,      KC_TRNS, RM_VALD, KC_NO,   KC_NO,   KC_NO,   KC_MPRV, KC_MPLY,
-                          KC_NO,   KC_MNXT, KC_TRNS, KC_TRNS, KC_TRNS,      KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS
+        QK_BOOT, KC_NO,   KC_NO,  KC_NO,   KC_NO,   KC_NO,                          KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,
+        KC_NO,   KC_NO,   KC_NO,  KC_NO,   KC_NO,   KC_NO,                          KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,
+        KC_NO,   KC_NO ,  KC_NO,  KC_NO,   KC_NO,   KC_NO,                          KC_NO,   KC_VOLD, KC_MUTE, KC_VOLU, KC_NO,   KC_NO,
+        KC_NO,   KC_NO,   KC_NO,  KC_NO,   KC_NO,   KC_NO,   KC_TRNS,      KC_TRNS, KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_MPRV, KC_MPLY,
+                          KC_NO,  KC_MNXT, KC_TRNS, KC_TRNS, KC_TRNS,      KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS
     )
     // clang-format on
 };

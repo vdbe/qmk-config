@@ -15,6 +15,7 @@
  */
 
 #include QMK_KEYBOARD_H
+#include "gpio.h"
 
 enum layers {
   _DEFAULT = 0,
@@ -55,3 +56,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     )
     // clang-format on
 };
+
+void keyboard_pre_init_user(void) {
+  gpio_set_pin_output(LED_POWER_PIN);
+  gpio_write_pin_high(LED_POWER_PIN);
+}

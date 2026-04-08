@@ -17,6 +17,16 @@
 #include QMK_KEYBOARD_H
 #include "gpio.h"
 
+#ifdef OLED_ENABLE
+void render_logo(void);
+void render_logo_text(void);
+void render_space(void);
+void render_layer_state(void);
+void render_mod_status_gui_alt(uint8_t modifiers);
+void render_mod_status_ctrl_shift(uint8_t modifiers);
+void render_kb_LED_state(void);
+#endif
+
 enum layers {
   _DEFAULT = 0,
   _FUNCTION,
@@ -60,4 +70,36 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 void keyboard_pre_init_user(void) {
   gpio_set_pin_output(LED_POWER_PIN);
   gpio_write_pin_high(LED_POWER_PIN);
+}
+
+const char NEW_FIRMWARE[] = "Awaiting\nNew\nFirmware\0";
+const char REBOOTING[] = "Rebooting\0";
+
+void oled_render_boot(bool bootloader) {
+  oled_clear();
+
+  const char *msg = bootloader ? NEW_FIRMWARE : REBOOTING;
+  oled_write_P(PSTR(msg), false);
+
+  oled_render_dirty(true);
+}
+
+bool shutdown_user(bool jump_to_bootloader) {
+  oled_render_boot(jump_to_bootloader);
+
+  return false;
+}
+
+bool oled_task_user(void) {
+  // Renders the current keyboard state (layers and mods)
+  render_logo();
+  render_logo_text();
+  render_space();
+  render_layer_state();
+  render_space();
+  render_mod_status_gui_alt(get_mods() | get_oneshot_mods());
+  render_mod_status_ctrl_shift(get_mods() | get_oneshot_mods());
+  render_kb_LED_state();
+
+  return false;
 }

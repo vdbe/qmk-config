@@ -23,6 +23,8 @@ from qmk.keymap import (
     locate_keymap,
 )
 
+QMK_FIRMWARE = REPO_ROOT / "qmk_firmware"
+
 
 DEFAULT_OUTPUT = str(REPO_ROOT / "assets")
 
@@ -100,7 +102,7 @@ def keyboard_to_filename(kb: str) -> str:
 def generate_keymap_json(kb: str, km: str, keymap_file: Path) -> dict[str, Any]:
     logging.debug(f"Generating keymap JSON for {kb}:{km} from {keymap_file}")
     if keymap_file.suffix == ".c":
-        return c2json(kb, km, str(keymap_file))
+        return c2json(kb, km, keymap_file, use_cpp=False)
     else:
         return parse_configurator_json(keymap_file)
 

@@ -103,3 +103,58 @@ bool oled_task_user(void) {
 
   return false;
 }
+
+#ifdef FORCED_CROSS_HAND_MODIFIERS
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  // Ignore key-up events: only act on key-down.
+  if (!record->event.pressed) {
+    return true;
+  }
+
+// SPLIT_MODS_ENABLE (in config.h) shares modifier state across halves.
+#ifdef SPLIT_KEYBOARD
+#ifndef SPLIT_MODS_ENABLE
+#error "SPLIT_MODS_ENABLE is required for forced cross-hand modifiers"
+#endif
+#endif
+
+  uint8_t mods = get_mods();
+
+  // Are left Ctrl, Shift or Alt currently held?
+  uint8_t left_modifiers =
+      mods & (MOD_BIT(KC_LCTL) | MOD_BIT(KC_LSFT) | MOD_BIT(KC_LALT));
+  // Are right Ctrl, Shift or Alt currently held?
+  uint8_t right_modifiers =
+      mods & (MOD_BIT(KC_RCTL) | MOD_BIT(KC_RSFT) | MOD_BIT(KC_RALT));
+
+  // If neither restricting modifier is held, allow everything.
+  if (!left_modifiers && !right_modifiers) {
+    return true;
+  }
+
+  // Never supress modifier keys (so Ctrl/Shift/Alt/Mod/... still register).
+  if (IS_MODIFIER_KEYCODE(keycode)) {
+    return true;
+  }
+
+  // Determine which physical half this key press is on.
+  // Use the key's matrix row, not `is_keyboard_left()`,
+  // which reports the MCU, not the key origin.
+  // On split keyboards with SPI transport, all key events run on
+  // the master MCU, so `is_keyboard_left()` is constant per side.
+  if (record->event.key.row < (MATRIX_ROWS / 2)) {
+    // On left half: supress when one of `left_modifiers` is held.
+    if (left_modifiers) {
+      return false;
+    }
+  } else {
+    // On right half: suppres when one of `right_modifiers` is held.
+    if (right_modifiers) {
+      return false;
+    }
+  }
+
+  return true;
+}
+#endif

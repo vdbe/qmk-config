@@ -90,9 +90,23 @@ bool oled_task_user(void) {
 
 #ifdef FORCED_CROSS_HAND_MODIFIERS
 
+#ifndef FORCED_CROSS_HAND_MODIFIERS_LEFT
+#define FORCED_CROSS_HAND_MODIFIERS_LEFT                                       \
+  (MOD_BIT(KC_LCTL) | MOD_BIT(KC_LSFT) | MOD_BIT(KC_LALT))
+#endif
+#ifndef FORCED_CROSS_HAND_MODIFIERS_RIGHT
+#define FORCED_CROSS_HAND_MODIFIERS_RIGHT                                      \
+  (MOD_BIT(KC_RCTL) | MOD_BIT(KC_RSFT) | MOD_BIT(KC_RALT))
+#endif
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   // Ignore key-up events: only act on key-down.
   if (!record->event.pressed) {
+    return true;
+  }
+
+  // Never suppress modifier keys
+  if (IS_MODIFIER_KEYCODE(keycode)) {
     return true;
   }
 
@@ -103,22 +117,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #endif
 #endif
 
-  uint8_t mods = get_mods();
+  uint8_t mods = get_mods() & (FORCED_CROSS_HAND_MODIFIERS_LEFT |
+                               FORCED_CROSS_HAND_MODIFIERS_RIGHT);
 
-  // Are left Ctrl, Shift or Alt currently held?
-  uint8_t left_modifiers =
-      mods & (MOD_BIT(KC_LCTL) | MOD_BIT(KC_LSFT) | MOD_BIT(KC_LALT));
-  // Are right Ctrl, Shift or Alt currently held?
-  uint8_t right_modifiers =
-      mods & (MOD_BIT(KC_RCTL) | MOD_BIT(KC_RSFT) | MOD_BIT(KC_RALT));
-
-  // If neither restricting modifier is held, allow everything.
-  if (!left_modifiers && !right_modifiers) {
+  // Fast path: no modifiers held at all, nothing to suppress.
+  if (!mods) {
     return true;
   }
 
-  // Never suppress modifier keys (so Ctrl/Shift/Alt/Mod/... still register).
-  if (IS_MODIFIER_KEYCODE(keycode)) {
+  // Already know mods != 0 here, so atleast one side has modifiers.
+  // If both sides have a modifier held allow all keys.
+  if ((mods & FORCED_CROSS_HAND_MODIFIERS_LEFT) != 0b0 &&
+      (mods & FORCED_CROSS_HAND_MODIFIERS_RIGHT) != 0b0) {
     return true;
   }
 
@@ -128,13 +138,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   // On split keyboards with SPI transport, all key events run on
   // the master MCU, so `is_keyboard_left()` is constant per side.
   if (record->event.key.row < (MATRIX_ROWS / 2)) {
-    // On left half: suppress when one of `left_modifiers` is held.
-    if (left_modifiers) {
+    // On left half: suppress when one a left modifier is held.
+    if (mods & FORCED_CROSS_HAND_MODIFIERS_LEFT) {
       return false;
     }
   } else {
-    // On right half: suppress when one of `right_modifiers` is held.
-    if (right_modifiers) {
+    // On right half: suppres when a right modifier is held.
+    if (mods & FORCED_CROSS_HAND_MODIFIERS_RIGHT) {
       return false;
     }
   }

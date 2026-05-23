@@ -2,7 +2,7 @@
   description = "Personal QMK config environment";
 
   inputs = {
-    nixpkgs.url = "https://nixpkgs.dev/channel/nixpkgs-unstable";
+    nixpkgs.url = "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.xz";
   };
 
   outputs =
@@ -41,13 +41,14 @@
             ];
           };
 
-          nix = default.overrideAttrs (old: {
-            packages = (old.packages or []) ++ [
+          nix = pkgs.mkShell {
+            inputsFrom = [ qmk ];
+            packages = [
               self.formatter.${system}
               pkgs.nil
               pkgs.statix
             ];
-          });
+          };
         in
         {
           inherit default qmk nix;

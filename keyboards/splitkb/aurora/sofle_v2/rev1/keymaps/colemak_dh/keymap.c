@@ -1,19 +1,3 @@
-/* Copyright 2023 splitkb.com <support@splitkb.com>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 #include QMK_KEYBOARD_H
 #include "gpio.h"
 
@@ -133,7 +117,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return true;
   }
 
-  // Never supress modifier keys (so Ctrl/Shift/Alt/Mod/... still register).
+  // Never suppress modifier keys (so Ctrl/Shift/Alt/Mod/... still register).
   if (IS_MODIFIER_KEYCODE(keycode)) {
     return true;
   }
@@ -144,12 +128,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   // On split keyboards with SPI transport, all key events run on
   // the master MCU, so `is_keyboard_left()` is constant per side.
   if (record->event.key.row < (MATRIX_ROWS / 2)) {
-    // On left half: supress when one of `left_modifiers` is held.
+    // On left half: suppress when one of `left_modifiers` is held.
     if (left_modifiers) {
       return false;
     }
   } else {
-    // On right half: suppres when one of `right_modifiers` is held.
+    // On right half: suppress when one of `right_modifiers` is held.
     if (right_modifiers) {
       return false;
     }
